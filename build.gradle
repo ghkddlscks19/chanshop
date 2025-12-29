@@ -11,6 +11,7 @@ description = 'chanshop multi-module monolithic application'
 subprojects {
     apply plugin: 'java'
     apply plugin: 'io.spring.dependency-management'
+    apply plugin: 'jacoco'
 
     group = 'com.chanshop'
     version = '0.0.1-SNAPSHOT'
@@ -46,5 +47,64 @@ subprojects {
 
     tasks.named('test') {
         useJUnitPlatform()
+        finalizedBy jacocoTestReport // 테스트 후 자동으로 리포트 생성
+    }
+
+    // Jacoco 설정
+    jacoco {
+        toolVersion = "0.8.12"
+    }
+
+    // Jacoco 테스트 리포트 생성
+    jacocoTestReport {
+        dependsOn test // 테스트 실행 후 리포트 생성
+
+        reports {
+            xml.required = true
+            html.required = true
+            csv.required = false
+        }
+
+        afterEvaluate {
+            classDirectories.setFrom(files(classDirectories.files.collect {
+                fileTree(dir: it, exclude: [
+                    '**/config/**',
+                    '**/dto/**',
+                    '**/domain/**',
+                    '**/*Application*',
+                    '**/*Exception*'
+                ])
+            }))
+        }
+    }
+
+    // Jacoco 커버리지 검증 (원하는 최소 커버리지 설정)
+    jacocoTestCoverageVerification {
+        violationRules {
+            rule {
+                enabled = true
+                element = 'CLASS'
+
+                limit {
+                    counter = 'LINE'
+                    value = 'COVEREDRATIO'
+                    minimum = 0.70 // 70% 이상 커버리지
+                }
+
+                limit {
+                    counter = 'BRANCH'
+                    value = 'COVEREDRATIO'
+                    minimum = 0.70
+                }
+
+                excludes = [
+                    '*.config.*',
+                    '*.dto.*',
+                    '*.domain.*',
+                    '*.*Application',
+                    '*.*Exception'
+                ]
+            }
+        }
     }
 }

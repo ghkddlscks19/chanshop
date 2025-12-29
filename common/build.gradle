@@ -8,6 +8,9 @@ dependencies {
     // Spring Boot starters for common functionality
     implementation 'org.springframework.boot:spring-boot-starter-validation'
 
+    // Spring Web for GlobalExceptionHandler
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+
     // Optional: Add if you need JSON serialization in common DTOs
     implementation 'com.fasterxml.jackson.core:jackson-databind'
 }
