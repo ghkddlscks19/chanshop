@@ -10,8 +10,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "users", indexes = {
     @Index(name = "idx_email", columnList = "email"),
-    @Index(name = "idx_status", columnList = "status"),
-    @Index(name = "idx_provider_provider_id", columnList = "provider, providerId")
+    @Index(name = "idx_status", columnList = "status")
 })
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -24,7 +23,7 @@ public class User extends BaseTimeEntity {
     @Column(nullable = false, unique = true, length = 100)
     private String email;
 
-    @Column // 소셜 로그인은 비밀번호가 없으므로 nullable
+    @Column(nullable = false)
     private String password;
 
     @Column(nullable = false, length = 50)
@@ -44,16 +43,8 @@ public class User extends BaseTimeEntity {
     @Column(nullable = false, length = 20)
     private UserStatus status;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 20)
-    private AuthProvider provider; // 인증 제공자 (LOCAL, GOOGLE, KAKAO, NAVER)
-
-    @Column(length = 100)
-    private String providerId; // 소셜 로그인 제공자의 사용자 ID
-
     @Builder
-    public User(String email, String password, String name, String phone,
-                AuthProvider provider, String providerId) {
+    public User(String email, String password, String name, String phone) {
         this.email = email;
         this.password = password;
         this.name = name;
@@ -61,8 +52,6 @@ public class User extends BaseTimeEntity {
         this.role = UserRole.USER;
         this.point = 0;
         this.status = UserStatus.ACTIVE;
-        this.provider = provider != null ? provider : AuthProvider.LOCAL;
-        this.providerId = providerId;
     }
 
     public enum UserRole {
@@ -73,13 +62,6 @@ public class User extends BaseTimeEntity {
         ACTIVE,     // 활성 - 정상 계정
         LOCKED,     // 잠김 - 일시 정지 (복구 가능)
         WITHDRAWN   // 탈퇴 - 회원 탈퇴 (소프트 삭제)
-    }
-
-    public enum AuthProvider {
-        LOCAL,   // 일반 회원가입
-        GOOGLE,  // 구글 소셜 로그인
-        KAKAO,   // 카카오 소셜 로그인
-        NAVER    // 네이버 소셜 로그인
     }
 
     // 비즈니스 메서드

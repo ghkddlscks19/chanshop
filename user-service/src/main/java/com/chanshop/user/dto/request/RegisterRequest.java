@@ -35,7 +35,6 @@ public class RegisterRequest {
                 .password(passwordEncoder.encode(password))
                 .name(name)
                 .phone(phone)
-                .provider(User.AuthProvider.LOCAL)
                 .build();
     }
 }
