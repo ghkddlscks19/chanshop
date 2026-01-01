@@ -13,4 +13,7 @@ dependencies {
 
     // Optional: Add if you need JSON serialization in common DTOs
     implementation 'com.fasterxml.jackson.core:jackson-databind'
+
+    // Swagger/OpenAPI
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.4'
 }
