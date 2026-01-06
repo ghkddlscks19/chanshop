@@ -25,8 +25,8 @@ public class SecurityConfig {
                         .requestMatchers("/swagger-ui", "/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**").permitAll()
                         // 에러 페이지 허용
                         .requestMatchers("/error").permitAll()
-                        // 회원가입 API 허용
-                        .requestMatchers("/api/users/register").permitAll()
+                        // 회원가입, 로그인 API 허용
+                        .requestMatchers("/api/users/register", "/api/users/login").permitAll()
                         // 나머지는 인증 필요
                         .anyRequest().authenticated()
                 );
